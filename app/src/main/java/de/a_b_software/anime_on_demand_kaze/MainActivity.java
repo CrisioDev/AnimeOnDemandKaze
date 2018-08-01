@@ -1,5 +1,6 @@
 package de.a_b_software.anime_on_demand_kaze;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -59,21 +60,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-    /*
-    *
-    *
-    *
-    * <form class="form" action="/users/sign_in" accept-charset="UTF-8" method="post">
-    *     <input name="utf8" type="hidden" value="✓">
-    *     <input type="hidden" name="authenticity_token" value="aqfywxA3Qr/TsTxkspMR8q6/hCo10OoKnBZ2a5pNh2HoZmRrStmbXnLzHvIztlhkKjUbhUptS5E32LJmA4lhvQ==">
-          <input autofocus="autofocus" class="form-control" type="text" name="user[login]" id="user_login">
-          <input class="form-control" type="password" name="user[password]" id="user_password">
-          <input name="user[remember_me]" type="hidden" value="0">
-        </form>
-    *
-    *
-    * */
+    public void showGrid(View view){
+        startActivity(new Intent(this, MyAnimes.class));
+    }
 
     private void getWebsite(final TextView show, final String user, final String password) {
         new Thread(new Runnable() {
@@ -92,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     String rememberme = values.get(2);
                     String remembermetoo = values.get(3);
                     String commit = values.get(4);
-                    builder.append(utf8 + " ");
+                    /*builder.append(utf8 + " ");
                     builder.append(token + " ");
                     builder.append(rememberme + " ");
                     builder.append(user + " ");
@@ -103,9 +92,9 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("TOKEN " + token);
                     System.out.println("USER " + user);
                     System.out.println("PASSWORD " + password);
-                    System.out.println("COMMIT " + commit);
+                    System.out.println("COMMIT " + commit);*/
 
-                    Document login = Jsoup.connect("https://www.anime-on-demand.de/users/sign_in")
+                    /*Document login = Jsoup.connect("https://www.anime-on-demand.de/users/sign_in")
                             .data("utf8",utf8)
                             .data("authenticity_token",token)
                             .data("user[login]",user)
@@ -114,9 +103,32 @@ public class MainActivity extends AppCompatActivity {
                             .data("commit","Einloggen")
                             .cookies(loginCon.cookies())
                             .followRedirects(true)
-                            .post();
+                            .post();*/
 
-                    builder.append(login.text());
+                    Connection.Response login = Jsoup.connect("https://www.anime-on-demand.de/users/sign_in")
+                            .data("utf8",utf8)
+                            .data("authenticity_token",token)
+                            .data("user[login]",user)
+                            .data("user[password]",password)
+                            .data("user[remember_me]","0")
+                            .data("commit","Einloggen")
+                            .cookies(loginCon.cookies())
+                            .followRedirects(true)
+                            .method(Connection.Method.POST)
+                            .execute();
+
+
+                    Document myanimes = Jsoup.connect("https://www.anime-on-demand.de/myanimes").cookies(login.cookies()).get();
+                    Elements myanime = myanimes.getElementsByClass("animebox-title");
+                    Elements myanimelinks = myanimes.getElementsByClass("animebox-link");
+                    List<String> textlist = myanime.eachText();
+                    for(String temp:textlist){
+                        builder.append(temp);
+                    }
+                    //builder.append(login.parse().getElementsByClass("jcarousel-container-new").text());
+
+
+
 
                 } catch (IOException e) {
                     e.printStackTrace();

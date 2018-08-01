@@ -3,4 +3,5 @@
     <string name="email_login">Email</string>
     <string name="passwort_login">Passwort</string>
     <string name="login_button">Login</string>
+    <string name="picAlt">Anime Picture</string>
 </resources>
