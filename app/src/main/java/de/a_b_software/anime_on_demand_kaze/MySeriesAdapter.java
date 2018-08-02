@@ -1,20 +1,14 @@
 package de.a_b_software.anime_on_demand_kaze;
+
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.InputStream;
-
-public class MyAnimeListAdapter extends RecyclerView.Adapter<MyAnimeListAdapter.ViewHolder> {
-
+public class MySeriesAdapter extends RecyclerView.Adapter<MySeriesAdapter.ViewHolder> {
     private String[] mData;
     private String[] picData;
     private String[] linkData;
@@ -22,7 +16,7 @@ public class MyAnimeListAdapter extends RecyclerView.Adapter<MyAnimeListAdapter.
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    MyAnimeListAdapter(Context context, String[][] data) {
+    MySeriesAdapter(Context context, String[][] data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data[0];
         this.linkData = data[1];
@@ -31,18 +25,17 @@ public class MyAnimeListAdapter extends RecyclerView.Adapter<MyAnimeListAdapter.
 
     // inflates the cell layout from xml when needed
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.myanimelist_item, parent, false);
-        return new ViewHolder(view);
+    public MySeriesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.series_item, parent, false);
+        return new MySeriesAdapter.ViewHolder(view);
     }
 
     // binds the data to the textview in each cell
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(MySeriesAdapter.ViewHolder holder, int position) {
         holder.myTextView.setText(mData[position]);
-        new DownloadImageTask((ImageView) holder.myImageView)
+        new MyAnimeListAdapter.DownloadImageTask((ImageView) holder.myImageView)
                 .execute(picData[position]);
-
     }
 
     // total number of cells
@@ -86,30 +79,5 @@ public class MyAnimeListAdapter extends RecyclerView.Adapter<MyAnimeListAdapter.
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int position);
-    }
-
-    public static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
     }
 }

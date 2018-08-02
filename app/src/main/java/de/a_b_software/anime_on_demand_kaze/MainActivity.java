@@ -19,6 +19,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sp1=this.getSharedPreferences("Login", MODE_PRIVATE);
 
+
         String unm=sp1.getString("Unm", null);
         String pass = sp1.getString("Psw", null);
+        if((!unm.isEmpty()) && (!pass.isEmpty())){
+            getWebsite(unm, pass);
+        }
         EditText userT = (EditText) findViewById(R.id.userText);
         userT.setText(unm);
         EditText passT = (EditText) findViewById(R.id.passwordText);
@@ -53,22 +58,22 @@ public class MainActivity extends AppCompatActivity {
                 Ed.putString("Psw",password);
                 Ed.apply();
 
-                TextView show = (TextView) findViewById(R.id.textView);
-
-                getWebsite(show, user, password);
+                getWebsite(user, password);
             }
         });
+
     }
 
-    private void showGrid(String[][] titleArray){
+    private void showGrid(String[][] titleArray,Map<String,String> cookie){
         Intent myanimesintent = new Intent(this, MyAnimes.class);
         myanimesintent.putExtra("EXTRA_TITLE_LIST",titleArray[0]);
         myanimesintent.putExtra("EXTRA_LINK_LIST",titleArray[1]);
         myanimesintent.putExtra("EXTRA_PIC_LIST",titleArray[2]);
+        myanimesintent.putExtra("EXTRA_COOKIE", (Serializable) cookie);
         startActivity(myanimesintent);
     }
 
-    private void getWebsite(final TextView show, final String user, final String password) {
+    private void getWebsite(final String user, final String password) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -129,16 +134,16 @@ public class MainActivity extends AppCompatActivity {
                         titleArray[1][i] = myanime.get(i).getElementsByClass("animebox-link").first().getElementsByTag("a").first().attr("href");
                         titleArray[2][i] = myanime.get(i).getElementsByClass("animebox-image").first().getElementsByTag("img").first().attr("src");
                     }
-                    showGrid(titleArray);
+                    showGrid(titleArray,login.cookies());
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        show.setText(builder.toString());
                     }
                 });
             }
