@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import java.lang.reflect.Array;
+
 public class MyAnimes extends AppCompatActivity implements MyAnimeListAdapter.ItemClickListener{
 
     MyAnimeListAdapter adapter;
@@ -17,7 +19,10 @@ public class MyAnimes extends AppCompatActivity implements MyAnimeListAdapter.It
         setContentView(R.layout.activity_my_animes);
 
         // data to populate the RecyclerView with
-        String[] data = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48"};
+        String[][] data = new String[3][];
+        data[0] = getIntent().getStringArrayExtra("EXTRA_TITLE_LIST");
+        data[1] = getIntent().getStringArrayExtra("EXTRA_LINK_LIST");
+        data[2] = getIntent().getStringArrayExtra("EXTRA_PIC_LIST");
 
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recycleMyAnime);
@@ -31,7 +36,7 @@ public class MyAnimes extends AppCompatActivity implements MyAnimeListAdapter.It
 
     @Override
     public void onItemClick(View view, int position) {
-        Log.i("TAG", "You clicked number " + adapter.getItem(position) + ", which is at cell position " + position);
+        Log.i("TAG", "You clicked anime \"" + adapter.getItem(position) + "\", which is at cell position " + position);
     }
 
 

@@ -60,8 +60,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void showGrid(View view){
-        startActivity(new Intent(this, MyAnimes.class));
+    private void showGrid(String[][] titleArray){
+        Intent myanimesintent = new Intent(this, MyAnimes.class);
+        myanimesintent.putExtra("EXTRA_TITLE_LIST",titleArray[0]);
+        myanimesintent.putExtra("EXTRA_LINK_LIST",titleArray[1]);
+        myanimesintent.putExtra("EXTRA_PIC_LIST",titleArray[2]);
+        startActivity(myanimesintent);
     }
 
     private void getWebsite(final TextView show, final String user, final String password) {
@@ -117,18 +121,15 @@ public class MainActivity extends AppCompatActivity {
                             .method(Connection.Method.POST)
                             .execute();
 
-
                     Document myanimes = Jsoup.connect("https://www.anime-on-demand.de/myanimes").cookies(login.cookies()).get();
-                    Elements myanime = myanimes.getElementsByClass("animebox-title");
-                    Elements myanimelinks = myanimes.getElementsByClass("animebox-link");
-                    List<String> textlist = myanime.eachText();
-                    for(String temp:textlist){
-                        builder.append(temp);
+                    Elements myanime = myanimes.getElementsByClass("three-box animebox");
+                    String[][] titleArray = new String[3][myanime.size()];
+                    for(int i=0; i < myanime.size(); i++){
+                        titleArray[0][i] = myanime.get(i).getElementsByClass("animebox-title").first().text();
+                        titleArray[1][i] = myanime.get(i).getElementsByClass("animebox-link").first().getElementsByTag("a").first().attr("href");
+                        titleArray[2][i] = myanime.get(i).getElementsByClass("animebox-image").first().getElementsByTag("img").first().attr("src");
                     }
-                    //builder.append(login.parse().getElementsByClass("jcarousel-container-new").text());
-
-
-
+                    showGrid(titleArray);
 
                 } catch (IOException e) {
                     e.printStackTrace();
