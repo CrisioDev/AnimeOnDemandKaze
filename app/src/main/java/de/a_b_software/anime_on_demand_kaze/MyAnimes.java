@@ -34,6 +34,7 @@ public class MyAnimes extends AppCompatActivity implements MyAnimeListAdapter.It
         data[0] = getIntent().getStringArrayExtra("EXTRA_TITLE_LIST");
         data[1] = getIntent().getStringArrayExtra("EXTRA_LINK_LIST");
         data[2] = getIntent().getStringArrayExtra("EXTRA_PIC_LIST");
+
         logincookie = (Map<String,String>) getIntent().getSerializableExtra("EXTRA_COOKIE");
 
         // set up the RecyclerView
@@ -52,12 +53,13 @@ public class MyAnimes extends AppCompatActivity implements MyAnimeListAdapter.It
         getWebsite(position);
     }
 
-    private void showSeries(String[][] titleArray){
+    private void showSeries(String[][] titleArray, String mainlink){
         Intent myanimesintent = new Intent(this, Series.class);
         myanimesintent.putExtra("EXTRA_TITLE_LIST",titleArray[0]);
         myanimesintent.putExtra("EXTRA_LINK_LIST",titleArray[1]);
         myanimesintent.putExtra("EXTRA_PIC_LIST",titleArray[2]);
         myanimesintent.putExtra("EXTRA_COOKIE", (Serializable) logincookie);
+        myanimesintent.putExtra("EXTRA_LINK", mainlink);
         startActivity(myanimesintent);
     }
 
@@ -76,7 +78,7 @@ public class MyAnimes extends AppCompatActivity implements MyAnimeListAdapter.It
                         episodesArray[2][i] = Episodes.get(i).getElementsByClass("episodebox-image").first().getElementsByTag("img").first().attr("src");
                     }
                     logincookie = rmyanimes.cookies();
-                    showSeries(episodesArray);
+                    showSeries(episodesArray, adapter.getLink(position));
 
                 } catch (IOException e) {
                     e.printStackTrace();

@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".MyAnimes"></activity>
         <activity android:name=".Series"></activity>
+        <activity android:name=".SeriesSite"></activity>
     </application>
 
 </manifest>

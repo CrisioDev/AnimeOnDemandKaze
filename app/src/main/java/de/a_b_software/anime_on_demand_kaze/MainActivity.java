@@ -37,9 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         String unm=sp1.getString("Unm", null);
         String pass = sp1.getString("Psw", null);
-        if((!unm.isEmpty()) && (!pass.isEmpty())){
-            getWebsite(unm, pass);
-        }
+
         EditText userT = (EditText) findViewById(R.id.userText);
         userT.setText(unm);
         EditText passT = (EditText) findViewById(R.id.passwordText);

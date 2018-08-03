@@ -1,5 +1,6 @@
 package de.a_b_software.anime_on_demand_kaze;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,11 +14,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Map;
 
 public class Series extends AppCompatActivity implements MySeriesAdapter.ItemClickListener{
     MySeriesAdapter adapter;
     Map<String,String> logincookie;
+    String mainlink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,7 @@ public class Series extends AppCompatActivity implements MySeriesAdapter.ItemCli
         data[0] = getIntent().getStringArrayExtra("EXTRA_TITLE_LIST");
         data[1] = getIntent().getStringArrayExtra("EXTRA_LINK_LIST");
         data[2] = getIntent().getStringArrayExtra("EXTRA_PIC_LIST");
+        mainlink = getIntent().getStringExtra("EXTRA_LINK");
         logincookie = (Map<String,String>) getIntent().getSerializableExtra("EXTRA_COOKIE");
 
         // set up the RecyclerView
@@ -44,29 +48,9 @@ public class Series extends AppCompatActivity implements MySeriesAdapter.ItemCli
     @Override
     public void onItemClick(View view, final int position) {
         Log.i("TAG", "You clicked anime \"" + adapter.getItem(position) + "\", which is at cell position " + position);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Connection.Response episodelink = Jsoup.connect("https://www.anime-on-demand.de"+adapter.getLink(position))
-                            .referrer("https://www.anime-on-demand.de/anime/249")
-                            .header("Accept","application/json, text/javascript, */*;")
-                            .cookies(logincookie)
-                            .method(Connection.Method.GET)
-                            .followRedirects(true)
-                            .execute();
-
-                    System.out.println(episodelink.body());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
-                });
-            }
-        }).start();
+        Intent myanimesintent = new Intent(this, SeriesSite.class);
+        myanimesintent.putExtra("EXTRA_LINK","https://www.anime-on-demand.de" + mainlink);
+        myanimesintent.putExtra("EXTRA_POSITION",position);
+        startActivity(myanimesintent);
     }
 }
