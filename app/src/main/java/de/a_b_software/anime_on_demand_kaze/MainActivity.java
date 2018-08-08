@@ -88,29 +88,6 @@ public class MainActivity extends AppCompatActivity {
                     String rememberme = values.get(2);
                     String remembermetoo = values.get(3);
                     String commit = values.get(4);
-                    /*builder.append(utf8 + " ");
-                    builder.append(token + " ");
-                    builder.append(rememberme + " ");
-                    builder.append(user + " ");
-                    builder.append(password + " ");
-                    builder.append(commit + " ");
-
-                    System.out.println("UTF8 " + utf8);
-                    System.out.println("TOKEN " + token);
-                    System.out.println("USER " + user);
-                    System.out.println("PASSWORD " + password);
-                    System.out.println("COMMIT " + commit);*/
-
-                    /*Document login = Jsoup.connect("https://www.anime-on-demand.de/users/sign_in")
-                            .data("utf8",utf8)
-                            .data("authenticity_token",token)
-                            .data("user[login]",user)
-                            .data("user[password]",password)
-                            .data("user[remember_me]","0")
-                            .data("commit","Einloggen")
-                            .cookies(loginCon.cookies())
-                            .followRedirects(true)
-                            .post();*/
 
                     Connection.Response login = Jsoup.connect("https://www.anime-on-demand.de/users/sign_in")
                             .data("utf8",utf8)

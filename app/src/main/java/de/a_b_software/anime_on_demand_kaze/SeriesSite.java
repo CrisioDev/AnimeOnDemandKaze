@@ -1,32 +1,33 @@
 package de.a_b_software.anime_on_demand_kaze;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.net.http.SslError;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.SslErrorHandler;
-import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 import android.webkit.WebView;
 
 public class SeriesSite extends AppCompatActivity {
 
     String position = "";
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Hide the Title Bar
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getSupportActionBar().hide(); //hide the title bar
+        try{
+            getSupportActionBar().hide(); //hide the title bar
+        }catch(NullPointerException exception){
+            exception.printStackTrace();
+        }
+
 
         setContentView(R.layout.webview);
 
@@ -37,12 +38,12 @@ public class SeriesSite extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         // Get the Intent that started this activity and extract the string
-        Intent intent = getIntent();
+        //Intent intent = getIntent();
 
         // Capture the layout's TextView and set the string as its text
         WebView wView = findViewById(R.id.webView);
 
-        WebSettings webSettings = wView.getSettings();
+        //WebSettings webSettings = wView.getSettings();
         wView.getSettings().setJavaScriptEnabled(true);
         wView.getSettings().setLoadWithOverviewMode(true);
         wView.getSettings().setUseWideViewPort(true);
