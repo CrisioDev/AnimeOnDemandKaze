@@ -1,11 +1,15 @@
 package de.a_b_software.anime_on_demand_kaze;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.net.http.SslError;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
@@ -14,10 +18,23 @@ import android.webkit.WebView;
 
 public class SeriesSite extends AppCompatActivity {
 
+    String position = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Hide the Title Bar
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide(); //hide the title bar
+
         setContentView(R.layout.webview);
+
+        // Hide the Status Bar
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
@@ -29,13 +46,10 @@ public class SeriesSite extends AppCompatActivity {
         wView.getSettings().setJavaScriptEnabled(true);
         wView.getSettings().setLoadWithOverviewMode(true);
         wView.getSettings().setUseWideViewPort(true);
-        wView.getSettings().setBuiltInZoomControls(true);
         wView.getSettings().setDomStorageEnabled(true);
         wView.setWebViewClient(new MyWebViewClient());
-        String position = getIntent().getStringExtra("EXTRA_POSITION");
+        position = getIntent().getStringExtra("EXTRA_POSITION");
         wView.loadUrl(getIntent().getStringExtra("EXTRA_LINK"));
-
-
 
     }
 
@@ -55,7 +69,37 @@ public class SeriesSite extends AppCompatActivity {
 
         public void onPageFinished(WebView view, String url) {
             // do your stuff here
-            view.loadUrl("javascript:document.getElementsByClassName('streamstarter_html5')[0].click()");
+            view.loadUrl("javascript:document.getElementsByClassName('episodebox')["+position+"].getElementsByClassName('streamstarter_html5')[0].click()");
+            view.loadUrl("javascript:(function() { " +
+                    "document.getElementsByClassName('l-contentcontainer')[1].getElementsByClassName('three-box-container')[0].style.display = 'none'; " +
+                    "})()");
+            view.loadUrl("javascript:(function() { " +
+                    "var children = document.getElementsByClassName('l-contentcontainer')[1].getElementsByTagName('*')[0].childNodes;\n" +
+                    "     for(var c=0; c < children.length; c++) {\n" +
+                    "      if(children[c].style) {\n" +
+                    "       children[c].style.display = 'none';\n" +
+                    "      }\n" +
+                    "     }" +
+                    "document.getElementById(\"player_container\").style.display = \"block\"; \n" +
+                    "document.getElementsByClassName('l-header')[0].style.display = 'none'; \n" +
+                    "document.getElementsByClassName('l-contentcontainer-footer')[0].style.display = 'none'; \n" +
+                    "document.getElementsByClassName('l-contentcontainer')[1].getElementsByTagName('h2')[0].style.display = 'none'; \n" +
+                    "document.getElementsByClassName('l-contentcontainer')[1].getElementsByTagName('h2')[1].style.display = 'none'; \n" +
+                    "document.getElementsByClassName('l-navigationscontainer')[0].style.display = 'none'; \n" +
+                    "var hrs = document.getElementsByTagName('hr');\n" +
+                    "     for(var c=0; c < hrs.length; c++) {\n" +
+                    "      if(hrs[c].style) {\n" +
+                    "       hrs[c].style.display = 'none';\n" +
+                    "      }\n" +
+                    "      else{\n" +
+                    "       hrs[c].style.display = 'none';\n" +
+                    "      }\n" +
+                    "     }" +
+                    "})()");
+            view.loadUrl("javascript:(function() { " +
+                    "document.getElementsByClassName('l-contentcontainer')[1].style.width = '100%'; " +
+                    "document.getElementsByClassName('l-contentcontainer')[1].style.padding = '0'; " +
+                    "})()");
         }
     }
 

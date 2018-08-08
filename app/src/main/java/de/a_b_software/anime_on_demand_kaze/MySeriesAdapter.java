@@ -68,9 +68,6 @@ public class MySeriesAdapter extends RecyclerView.Adapter<MySeriesAdapter.ViewHo
         return mData[id] + " " + linkData[id] + " " + picData[id];
     }
 
-    String getLink(int id) {
-        return linkData[id];
-    }
 
     // allows clicks events to be caught
     void setClickListener(ItemClickListener itemClickListener) {

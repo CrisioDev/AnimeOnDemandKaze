@@ -50,7 +50,7 @@ public class Series extends AppCompatActivity implements MySeriesAdapter.ItemCli
         Log.i("TAG", "You clicked anime \"" + adapter.getItem(position) + "\", which is at cell position " + position);
         Intent myanimesintent = new Intent(this, SeriesSite.class);
         myanimesintent.putExtra("EXTRA_LINK","https://www.anime-on-demand.de" + mainlink);
-        myanimesintent.putExtra("EXTRA_POSITION",position);
+        myanimesintent.putExtra("EXTRA_POSITION",Integer.toString(position));
         startActivity(myanimesintent);
     }
 }
